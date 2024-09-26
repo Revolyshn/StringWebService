@@ -16,9 +16,28 @@ class Program
                 break; // Выходим из цикла, если строка пустая
             }
 
-            string processedString = ProcessString(inputString);
-            Console.WriteLine("Обработанная строка: " + processedString);
+            if (CheckIfValidString(inputString))
+            {
+                string processedString = ProcessString(inputString);
+                Console.WriteLine("Обработанная строка: " + processedString);
+            }
+            else
+            {
+                Console.WriteLine("Ошибка: Введены неподходящие символы.");
+            }
         }
+    }
+
+    static bool CheckIfValidString(string input)
+    {
+        foreach (char c in input)
+        {
+            if (!char.IsLetter(c) || !char.IsLower(c) || c < 'a' || c > 'z')
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     static string ProcessString(string input)
