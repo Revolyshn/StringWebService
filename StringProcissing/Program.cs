@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Collections.Generic;
 
 class Program
 {
@@ -20,6 +21,12 @@ class Program
             {
                 string processedString = ProcessString(inputString);
                 Console.WriteLine("Обработанная строка: " + processedString);
+
+                Dictionary<char, int> charCounts = CountCharacterOccurrences(processedString);
+                foreach (var kvp in charCounts)
+                {
+                    Console.WriteLine($"Символ '{kvp.Key}' встречается {kvp.Value} раз.");
+                }
             }
             else
             {
@@ -69,5 +76,24 @@ class Program
         char[] charArray = str.ToCharArray();
         Array.Reverse(charArray);
         return new string(charArray);
+    }
+
+    static Dictionary<char, int> CountCharacterOccurrences(string str)
+    {
+        Dictionary<char, int> charCounts = new Dictionary<char, int>();
+
+        foreach (char c in str)
+        {
+            if (charCounts.ContainsKey(c))
+            {
+                charCounts[c]++;
+            }
+            else
+            {
+                charCounts.Add(c, 1);
+            }
+        }
+
+        return charCounts;
     }
 }
