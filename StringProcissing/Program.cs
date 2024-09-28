@@ -27,6 +27,9 @@ class Program
                 {
                     Console.WriteLine($"Символ '{kvp.Key}' встречается {kvp.Value} раз.");
                 }
+
+                string longestVowelSubstring = FindLongestVowelSubstring(processedString);
+                Console.WriteLine($"Самая длинная подстрока, начинающаяся и заканчивающаяся на гласную: {longestVowelSubstring}");
             }
             else
             {
@@ -95,5 +98,32 @@ class Program
         }
 
         return charCounts;
+    }
+
+    static string FindLongestVowelSubstring(string str)
+    {
+        string longestSubstring = "";
+        HashSet<char> vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u', 'y' };
+
+        for (int i = 0; i < str.Length; i++)
+        {
+            if (vowels.Contains(str[i]))
+            {
+                for (int j = str.Length - 1; j > i; j--)
+                {
+                    if (vowels.Contains(str[j]))
+                    {
+                        string substring = str.Substring(i, j - i + 1);
+                        if (substring.Length > longestSubstring.Length)
+                        {
+                            longestSubstring = substring;
+                        }
+                        break; // Найдена первая гласная с конца
+                    }
+                }
+            }
+        }
+
+        return longestSubstring;
     }
 }
