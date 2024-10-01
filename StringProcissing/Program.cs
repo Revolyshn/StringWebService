@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 class Program
 {
@@ -34,7 +37,6 @@ class Program
                 Console.WriteLine("Выберите алгоритм сортировки:");
                 Console.WriteLine("1. Quicksort");
                 Console.WriteLine("2. Treesort");
-
                 int choice;
                 if (int.TryParse(Console.ReadLine(), out choice))
                 {
@@ -60,6 +62,9 @@ class Program
                 {
                     Console.WriteLine("Некорректный ввод.");
                 }
+
+                // Получаем случайное число и удаляем символ в строке
+                RemoveRandomCharacter(processedString);
             }
             else
             {
@@ -155,5 +160,68 @@ class Program
         }
 
         return longestSubstring;
+    }
+
+    static async void RemoveRandomCharacter(string str)
+    {
+        try
+        {
+            int randomIndex = await GetRandomNumberLessThanLength(str.Length);
+            if (randomIndex >= 0 && randomIndex < str.Length)
+            {
+                string modifiedString = str.Remove(randomIndex, 1);
+                Console.WriteLine($"\"Урезанная\" обработанная строка (удалён символ в позиции {randomIndex}): {modifiedString}");
+            }
+            else
+            {
+                Console.WriteLine("Ошибка: Получен некорректный индекс для удаления символа.");
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при удалении символа: {ex.Message}");
+        }
+    }
+
+    static async Task<int> GetRandomNumberLessThanLength(int maxLength)
+    {
+        // Используем API для получения случайного числа меньше maxLength
+        string apiUrl = $"http://www.randomnumberapi.com/api/v1.0/random?max={maxLength}";
+
+        try
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync(apiUrl);
+                if (response.IsSuccessStatusCode)
+                {
+                    string json = await response.Content.ReadAsStringAsync();
+                    int numeric = Int32.Parse(new String(json.Where(char.IsDigit).ToArray()));
+                    Console.WriteLine(numeric);
+                    return numeric;
+                }
+                else
+                {
+                    Console.WriteLine("Неудалось получить случайное число. Используется локальный генератор случайных чисел.");
+
+                    // В случае ошибки API, генерируем случайное число локально
+                    Random rnd = new Random();
+                    return rnd.Next(maxLength);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Ошибка при получении случайного числа: {ex.Message}");
+
+            // В случае ошибки API, генерируем случайное число локально
+            Random rnd = new Random();
+            return rnd.Next(maxLength);
+        }
+    }
+
+    public class RandomNumberData
+    {
+        public int Number { get; set; }
     }
 }
