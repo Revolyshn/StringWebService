@@ -30,6 +30,36 @@ class Program
 
                 string longestVowelSubstring = FindLongestVowelSubstring(processedString);
                 Console.WriteLine($"Самая длинная подстрока, начинающаяся и заканчивающаяся на гласную: {longestVowelSubstring}");
+
+                Console.WriteLine("Выберите алгоритм сортировки:");
+                Console.WriteLine("1. Quicksort");
+                Console.WriteLine("2. Treesort");
+
+                int choice;
+                if (int.TryParse(Console.ReadLine(), out choice))
+                {
+                    switch (choice)
+                    {
+                        case 1:
+                            Quicksort quicksort = new Quicksort();
+                            string sortedStringQuicksort = quicksort.Sort(processedString);
+                            Console.WriteLine("Отсортированная обработанная строка (Quicksort): " + sortedStringQuicksort);
+                            break;
+                        case 2:
+                            Treesort treesort = new Treesort();
+                            treesort.BuildTree(processedString);
+                            string sortedStringTreesort = treesort.GetSortedString();
+                            Console.WriteLine("Отсортированная обработанная строка (Treesort): " + sortedStringTreesort);
+                            break;
+                        default:
+                            Console.WriteLine("Некорректный выбор алгоритма.");
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Некорректный ввод.");
+                }
             }
             else
             {
