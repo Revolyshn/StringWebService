@@ -1,17 +1,20 @@
 using StringProcessingWebAPI.Handlers;
-using System.ComponentModel.Design;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Чтение конфигурации из файла appsettings.json
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+
+// Регистрация сервисов для внедрения зависимостей
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IStringProcessHandler, StringProcessHandler>();
 builder.Services.AddTransient<IRandomCharacterRemover, RandomCharacterRemover>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Конфигурация HTTP-пайплайна.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

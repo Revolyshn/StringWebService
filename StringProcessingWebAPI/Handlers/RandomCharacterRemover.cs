@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -8,6 +9,13 @@ namespace StringProcessingWebAPI.Handlers
 
     public class RandomCharacterRemover : IRandomCharacterRemover
     {
+        private readonly IConfiguration _configuration;
+
+        public RandomCharacterRemover(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public async Task<string> RemoveRandomCharacter(string str)
         {
             try
@@ -29,13 +37,14 @@ namespace StringProcessingWebAPI.Handlers
 
         private async Task<int> GetRandomNumberLessThanLength(int maxLength)
         {
-            string apiUrl = $"http://www.randomnumberapi.com/api/v1.0/random?max={maxLength}";
+            var randomNumUrl = _configuration.GetSection("RandomApi").Get<string>()+maxLength;
+
 
             try
             {
                 using (HttpClient client = new HttpClient())
                 {
-                    HttpResponseMessage response = await client.GetAsync(apiUrl);
+                    HttpResponseMessage response = await client.GetAsync(randomNumUrl);
                     if (response.IsSuccessStatusCode)
                     {
                         string json = await response.Content.ReadAsStringAsync();
