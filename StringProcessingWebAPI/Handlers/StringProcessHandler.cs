@@ -4,6 +4,14 @@ namespace StringProcessingWebAPI.Handlers
 {
     public class StringProcessHandler : IStringProcessHandler
     {
+
+        private readonly IConfiguration _configuration;
+
+        public StringProcessHandler(IConfiguration configuration)
+        {
+            _configuration = configuration;
+        }
+
         public string ProcessString(string input)
         {
             int length = input.Length;
@@ -72,6 +80,7 @@ namespace StringProcessingWebAPI.Handlers
 
         public bool CheckIfValidString(string input)
         {
+            // Проверка на допустимые символы
             foreach (char c in input)
             {
                 if (!char.IsLetter(c) || !char.IsLower(c) || c < 'a' || c > 'z')
@@ -79,6 +88,17 @@ namespace StringProcessingWebAPI.Handlers
                     return false;
                 }
             }
+
+            // Проверка на наличие строки в чёрном списке
+            var blackList = _configuration.GetSection("Settings:BlackList").Get<List<string>>();
+            foreach (var blackListedWord in blackList)
+            {
+                if (input.Contains(blackListedWord))
+                {
+                    return false; // Если строка содержит слово из чёрного списка
+                }
+            }
+
             return true;
         }
 
