@@ -12,6 +12,9 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddTransient<IStringProcessHandler, StringProcessHandler>();
 builder.Services.AddTransient<IRandomCharacterRemover, RandomCharacterRemover>();
 
+// Регистрируем singleton для отслеживания количества активных запросов
+builder.Services.AddSingleton<RequestTracker>();
+
 var app = builder.Build();
 
 // Конфигурация HTTP-пайплайна.
