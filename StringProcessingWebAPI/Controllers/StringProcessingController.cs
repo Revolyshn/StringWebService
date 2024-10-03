@@ -10,41 +10,58 @@ namespace StringProcessingWebAPI.Controllers
     {
         private IStringProcessHandler _stringHandler;
         private IRandomCharacterRemover _randomCharacterRemover;
+        private readonly RequestTracker _requestTracker;
 
-        public StringProcessingController(IStringProcessHandler stringHandler, IRandomCharacterRemover randomCharacterRemover)
+        public StringProcessingController(IStringProcessHandler stringHandler, IRandomCharacterRemover randomCharacterRemover, RequestTracker requestTracker)
         {
             _stringHandler = stringHandler;
             _randomCharacterRemover = randomCharacterRemover;
+            _requestTracker = requestTracker;
         }
 
         [HttpGet("process")]
         public async Task<IActionResult> StringHandler([FromQuery, Required, InputString] string inputString, [FromQuery] string sortAlgorithm = "quicksort")
         {
-            if (!ModelState.IsValid)
+
+            // Проверка количества активных запросов
+            if (!_requestTracker.TryStartRequest())
             {
-                return BadRequest(ModelState);
+                return StatusCode(503, new { message = "Сервис перегружен. Пожалуйста, попробуйте позже." });
             }
 
-            var processedString = _stringHandler.ProcessString(inputString);
-            var charCounts = _stringHandler.CountCharacterOccurrences(processedString);
-            var longestVowelSubstring = _stringHandler.FindLongestVowelSubstring(processedString);
-
-            // Определяем, какой алгоритм сортировки использовать
-            string sortedString = _stringHandler.SortString(processedString, sortAlgorithm.ToLower());
-
-            // Удаление случайного символа
-            var modifiedString = await _randomCharacterRemover.RemoveRandomCharacter(processedString);
-
-            var result = new
+            try
             {
-                ProcessedString = processedString,
-                CharCounts = charCounts,
-                LongestVowelSubstring = longestVowelSubstring,
-                SortedString = sortedString,
-                ModifiedString = modifiedString
-            };
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
 
-            return Ok(result);
+                var processedString = _stringHandler.ProcessString(inputString);
+                var charCounts = _stringHandler.CountCharacterOccurrences(processedString);
+                var longestVowelSubstring = _stringHandler.FindLongestVowelSubstring(processedString);
+
+                // Определяем, какой алгоритм сортировки использовать
+                string sortedString = _stringHandler.SortString(processedString, sortAlgorithm.ToLower());
+
+                // Удаление случайного символа
+                var modifiedString = await _randomCharacterRemover.RemoveRandomCharacter(processedString);
+
+                var result = new
+                {
+                    ProcessedString = processedString,
+                    CharCounts = charCounts,
+                    LongestVowelSubstring = longestVowelSubstring,
+                    SortedString = sortedString,
+                    ModifiedString = modifiedString
+                };
+
+                return Ok(result);
+            }
+            finally 
+            {
+                // Освобождаем место для следующего запроса
+                _requestTracker.EndRequest();
+            }
         }
 
         // Атрибут проверки для валидации строки
@@ -57,7 +74,7 @@ namespace StringProcessingWebAPI.Controllers
 
                 if (string.IsNullOrEmpty(inputString) || !stringHandler.CheckIfValidString(inputString))
                 {
-                    return new ValidationResult("Ошибка: Введены неподходящие символы.");
+                    return new ValidationResult("Ошибка: Введены неподходящие символы или строка находится в черном списке.");
                 }
 
                 return ValidationResult.Success;
