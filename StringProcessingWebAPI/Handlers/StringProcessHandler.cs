@@ -9,7 +9,11 @@ namespace StringProcessingWebAPI.Handlers
 
         public StringProcessHandler(IConfiguration configuration)
         {
-            _configuration = configuration;
+            _configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
+
+        public StringProcessHandler()
+        {
         }
 
         public string ProcessString(string input)
@@ -80,7 +84,6 @@ namespace StringProcessingWebAPI.Handlers
 
         public bool CheckIfValidString(string input)
         {
-            // Проверка на допустимые символы
             foreach (char c in input)
             {
                 if (!char.IsLetter(c) || !char.IsLower(c) || c < 'a' || c > 'z')
@@ -89,13 +92,17 @@ namespace StringProcessingWebAPI.Handlers
                 }
             }
 
-            // Проверка на наличие строки в чёрном списке
+            return true;
+        }
+
+        public bool CheckIfBlacklist(string input)
+        {
             var blackList = _configuration.GetSection("Settings:BlackList").Get<List<string>>();
             foreach (var blackListedWord in blackList)
             {
                 if (input.Contains(blackListedWord))
                 {
-                    return false; // Если строка содержит слово из чёрного списка
+                    return false;
                 }
             }
 

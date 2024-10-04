@@ -1,12 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
-using System;
-using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
-
-namespace StringProcessingWebAPI.Handlers
+﻿namespace StringProcessingWebAPI.Handlers
 {
-
     public class RandomCharacterRemover : IRandomCharacterRemover
     {
         private readonly IConfiguration _configuration;
@@ -37,7 +30,7 @@ namespace StringProcessingWebAPI.Handlers
 
         private async Task<int> GetRandomNumberLessThanLength(int maxLength)
         {
-            var randomNumUrl = _configuration.GetSection("RandomApi").Get<string>()+maxLength;
+            var randomNumUrl = _configuration.GetSection("RandomApi").Get<string>() + maxLength;
 
 
             try

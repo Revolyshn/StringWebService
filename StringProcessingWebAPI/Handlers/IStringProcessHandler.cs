@@ -6,6 +6,7 @@
         Dictionary<char, int> CountCharacterOccurrences(string str);
         string FindLongestVowelSubstring(string str);
         bool CheckIfValidString(string input);
+        bool CheckIfBlacklist(string input);
         string SortString(string str, string sortAlgorithm);
     }
 }

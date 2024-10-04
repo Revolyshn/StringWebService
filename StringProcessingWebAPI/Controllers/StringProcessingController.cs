@@ -57,7 +57,7 @@ namespace StringProcessingWebAPI.Controllers
 
                 return Ok(result);
             }
-            finally 
+            finally
             {
                 // Освобождаем место для следующего запроса
                 _requestTracker.EndRequest();
@@ -72,7 +72,8 @@ namespace StringProcessingWebAPI.Controllers
                 var inputString = value as string;
                 var stringHandler = (IStringProcessHandler)validationContext.GetService(typeof(IStringProcessHandler));
 
-                if (string.IsNullOrEmpty(inputString) || !stringHandler.CheckIfValidString(inputString))
+                if (string.IsNullOrEmpty(inputString) || !stringHandler.CheckIfValidString(inputString) 
+                    || !stringHandler.CheckIfBlacklist(inputString))
                 {
                     return new ValidationResult("Ошибка: Введены неподходящие символы или строка находится в черном списке.");
                 }
