@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StringProcessingWebAPI", "StringProcessingWebAPI\StringProcessingWebAPI.csproj", "{EC5309E6-891F-4979-B70D-C7A55A672596}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "StringProcessingWebAPI", "StringProcessingWebAPI\StringProcessingWebAPI.csproj", "{EC5309E6-891F-4979-B70D-C7A55A672596}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestStringProcessing", "TestStringProcessing\TestStringProcessing.csproj", "{CE5E9434-81A2-41A4-AB5B-37C70B47A4A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{EC5309E6-891F-4979-B70D-C7A55A672596}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC5309E6-891F-4979-B70D-C7A55A672596}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EC5309E6-891F-4979-B70D-C7A55A672596}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE5E9434-81A2-41A4-AB5B-37C70B47A4A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE5E9434-81A2-41A4-AB5B-37C70B47A4A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE5E9434-81A2-41A4-AB5B-37C70B47A4A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE5E9434-81A2-41A4-AB5B-37C70B47A4A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
